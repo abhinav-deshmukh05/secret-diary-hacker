@@ -1,16 +1,18 @@
-// index.js
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
+const connectDB = require('./config/db');
+
+const authGuard = require('./middleware/Auth');
+const authRoutes = require('./routes/auth');
 const app = express();
-const port = "3000";
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-  console.log("Response sent");
-});
+// connect DB FIRST
+connectDB();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-app.get('/data', (req, res) => {
-    res.json({ message: 'ok', data: [] });
+app.use(express.json());
+
+app.use('/api/signup',authRoutes);
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
