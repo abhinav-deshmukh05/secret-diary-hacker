@@ -62,6 +62,7 @@ const Auth = ({ onAuthSuccess }) => {
   title: {
     textAlign: 'center',
     marginBottom: '1.5rem',
+    color: '#333',
   },
   form: {
     display: 'flex',
