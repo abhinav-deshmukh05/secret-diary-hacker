@@ -64,7 +64,7 @@ router.get('/',authGuard, async(req,res)=>{
       {
         $set: {
           ...(title && { title }),
-          ...(content && { content }),
+          ...(content && { content }), 
         },
       },
       { new: true }
@@ -98,6 +98,7 @@ router.delete('/:id', authGuard, async (req, res) => {
     });
   } catch (err) {
     console.error('Delete note error:', err.message);
+   
     return res.status(500).json({ message: 'Server error' });
   }
 });
