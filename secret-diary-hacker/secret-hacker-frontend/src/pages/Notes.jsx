@@ -21,10 +21,11 @@ const Notes = () => {
     textAlign: 'left',
     boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
   },
-  title: { marginBottom: '1rem' },
+  title: { marginBottom: '1rem',color: '#555', },
   note: {
     padding: '1rem',
     borderBottom: '1px solid #eee',
+    
   },
   content: {
     fontSize: '0.9rem',
