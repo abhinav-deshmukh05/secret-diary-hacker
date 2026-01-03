@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import Auth from './pages/Auth';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Notes from './pages/Notes';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('token')
-  );
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-  };
-const styles = {
+  const styles = {
   container: {
     minHeight: '100vh',
     minWidth: '100vw',
@@ -58,30 +52,55 @@ const styles = {
     cursor: 'pointer',
   },
 };
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem('token')
+  );
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    navigate('/', { replace: true });
+  };
+
+  const handleNotes = () => {
+    navigate('/notes'); // SPA-friendly navigation using react-router
+  }
+
+  const LoggedIn = () => (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>Welcome 🎉</h1>
+        <p style={styles.subtitle}>
+          You are successfully logged in.
+        </p>
+
+        <button style={styles.primaryButton} onClick={handleNotes}>
+          Go to Notes
+        </button>
+
+        <button style={styles.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <>
-      {isAuthenticated ? (
-        <div style={styles.container}>
-          <div style={styles.card}>
-            <h1 style={styles.title}>Welcome 🎉</h1>
-            <p style={styles.subtitle}>
-              You are successfully logged in.
-            </p>
-
-            <button style={styles.primaryButton}>
-              Go to Notes
-            </button>
-
-            <button style={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        </div>
-      ) : (
-        <Auth onAuthSuccess={() => setIsAuthenticated(true)} />
-      )}
-    </>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? (
+            <LoggedIn />
+          ) : (
+            <Auth onAuthSuccess={() => setIsAuthenticated(true)} />
+          )
+        }
+      />
+      <Route path="/notes" element={<Notes />} />
+    </Routes>
   );
 }
 

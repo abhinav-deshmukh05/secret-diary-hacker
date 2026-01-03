@@ -17,3 +17,20 @@ export const createNote = async (noteData) => {
         throw error;
     }
 };
+
+export const deleteNote = async (noteId) => {
+    try {
+        const response = await api.delete(`/notes/${noteId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateNote = async (noteId, noteData) => {
+    try {
+        const response = await api.put(`/notes/${noteId}`, noteData);
+        return response.data;
+    } catch (error) {
+        throw error;
+    } };
