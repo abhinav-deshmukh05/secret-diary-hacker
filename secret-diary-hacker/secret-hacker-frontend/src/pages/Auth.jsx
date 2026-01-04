@@ -30,6 +30,9 @@ const Auth = ({ onAuthSuccess }) => {
     try {
       if (isSignup) {
         await api.post('/auth/signup', { email, password });
+        alert('Account created successfully! Please log in.');
+        setEmail('');
+        setPassword('');
         setIsSignup(false);
       } else {
         const res = await api.post('/auth/login', { email, password });

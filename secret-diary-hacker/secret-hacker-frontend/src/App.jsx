@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Auth from './pages/Auth';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Notes from './pages/Notes';
+import { isTokenExpired } from './api/axios';
 
 function App() {
   const styles = {
@@ -52,11 +53,29 @@ function App() {
     cursor: 'pointer',
   },
 };
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('token')
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const navigate = useNavigate();
+
+  // On mount: check token expiry and listen for global logout events
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && !isTokenExpired(token)) {
+      setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
+    }
+
+    const onLogout = () => {
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
+      navigate('/', { replace: true });
+    };
+
+    window.addEventListener('app:logout', onLogout);
+    return () => window.removeEventListener('app:logout', onLogout);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -100,6 +119,7 @@ function App() {
         }
       />
       <Route path="/notes" element={<Notes />} />
+      
     </Routes>
   );
 }
